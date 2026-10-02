@@ -13,3 +13,9 @@ def mul(a, b):
     return a * b
 
     print("Произведение:", mul(x, y))
+def div_safe(a, b):
+    if b == 0:
+        return "Деление на ноль невозможно"
+    return a / b
+
+    print("Частное:", div_safe(x, y))
