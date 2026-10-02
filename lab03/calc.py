@@ -9,3 +9,7 @@ def sub(a, b):
     return a - b
 
     print("Разность:", sub(x, y))
+def mul(a, b):
+    return a * b
+
+    print("Произведение:", mul(x, y))
