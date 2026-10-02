@@ -13,3 +13,7 @@ def mul(a, b):
     return a * b
 
     print("Произведение:", mul(x, y))
+def div(a, b):
+    return a / b
+
+    print("Частное:", div(x, y))
