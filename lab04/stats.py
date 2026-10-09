@@ -3,10 +3,13 @@ def parse_record(line: str) -> dict:
     if len(parts) != 3:
         raise ValueError("Ожидается ровно три поля")
     city, temp, date = parts
+    city = city.strip()
+    temp = temp.strip()
+    date = date.strip()
     if not city or not date:
         raise ValueError("Город или дата пустые")
     try:
-        temperature = float(temp)
+        temperature = float(temp.replace(",", "."))
     except ValueError:
         raise ValueError(f"Температура не число: {temp!r}")
     return {"city": city, "temperature": temperature, "date": date}
