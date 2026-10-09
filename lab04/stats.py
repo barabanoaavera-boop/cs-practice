@@ -1,5 +1,4 @@
 def parse_record(line: str) -> dict:
-    """Разбирает строку 'город;температура;дата' в словарь."""
     parts = line.split(";")
     if len(parts) != 3:
         raise ValueError("Ожидается ровно три поля")
@@ -14,7 +13,6 @@ def parse_record(line: str) -> dict:
 
 
 def read_valid(lines: list[str]) -> list[dict]:
-    """Разбирает строки журнала, пропуская пустые и некорректные."""
     records = []
     for line in lines:
         if not line.strip():
@@ -27,7 +25,6 @@ def read_valid(lines: list[str]) -> list[dict]:
 
 
 def average_by_city(records: list[dict]) -> dict:
-    """Средняя температура по каждому городу, округлённая до десятых."""
     total = {}
     count = {}
     for rec in records:
@@ -38,7 +35,6 @@ def average_by_city(records: list[dict]) -> dict:
 
 
 def warmest_city(records: list[dict]) -> str:
-    """Город с наибольшей средней температурой. При равенстве — первый по алфавиту."""
     averages = average_by_city(records)
     if not averages:
         return ""
