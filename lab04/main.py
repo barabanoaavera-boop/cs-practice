@@ -9,15 +9,14 @@ def main():
 
     print(len(records))
     print(len(lines) - len(records) - sum(1 for line in lines if not line.strip()))
-    print(warmest_city_average(records))
 
+    if not records:
+        print("Нет корректных записей")
+        return
 
-def warmest_city_average(records):
     averages = average_by_city(records)
-    if not averages:
-        return ""
     city = warmest_city(records)
-    return f"{averages[city]:.1f}"
+    print(f"{averages[city]:.1f}")
 
 
 if __name__ == "__main__":
