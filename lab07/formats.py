@@ -21,7 +21,6 @@ def csv_to_records(text: str) -> list[dict]:
 def parse_settings(lines: list[str]) -> dict:
     result = {}
     current_list_key = None
-    
     for line in lines:
         if not line.strip():
             continue
@@ -30,19 +29,16 @@ def parse_settings(lines: list[str]) -> dict:
         line = line.strip()
         if not line:
             continue
-            
         if line.startswith("- "):
             val = line[2:].strip()
             val = _convert_type(val)
             if current_list_key is not None:
                 result[current_list_key].append(val)
             continue
-            
         if ":" in line:
             parts = line.split(":", 1)
             key = parts[0].strip()
             value = parts[1].strip()
-            
             if value == "":
                 current_list_key = key
                 result[key] = []
@@ -58,15 +54,12 @@ def _convert_type(val: str):
         return True
     if lower_val in ("false", "no"):
         return False
-    
-    # Если есть запятая - это точно строка по правилам YAML
-    if "," in val:
-        return val
-        
+    clean_val = val.replace(",", ".")
     try:
-        if "." in val:
-            return float(val)
-        return int(val)
+        if "." in clean_val:
+            return float(clean_val)
+        else:
+            return int(clean_val)
     except ValueError:
         return val
 
