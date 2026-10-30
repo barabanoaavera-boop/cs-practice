@@ -25,15 +25,12 @@ def parse_settings(lines: list[str]) -> dict:
     for line in lines:
         if not line.strip():
             continue
-        # 1. Отбрасываем комментарии (всё после #)
         if "#" in line:
             line = line.split("#")[0]
-        # 2. Убираем пробелы по краям
         line = line.strip()
         if not line:
             continue
             
-        # 3. Проверяем на элемент списка
         if line.startswith("- "):
             val = line[2:].strip()
             val = _convert_type(val)
@@ -41,7 +38,6 @@ def parse_settings(lines: list[str]) -> dict:
                 result[current_list_key].append(val)
             continue
             
-        # 4. Проверяем на пару ключ: значение
         if ":" in line:
             parts = line.split(":", 1)
             key = parts[0].strip()
@@ -63,15 +59,17 @@ def _convert_type(val: str):
     if lower_val in ("false", "no"):
         return False
     
-    # Пограничный случай: если внутри есть запятая (3,5) — это не число по правилам YAML, а строка
-    if "," in val:
-        return val
-        
+    # Заменяем запятую на точку (на случай, если это дробное число)
+    val_replaced = val.replace(",", ".")
+    
     try:
-        if "." in val:
-            return float(val)
-        return int(val)
+        # Если после замены получилось число с точкой
+        if "." in val_replaced:
+            return float(val_replaced)
+        # Иначе пробуем сделать целое число
+        return int(val_replaced)
     except ValueError:
+        # Если не получилось — возвращаем оригинальную строку
         return val
 
 
