@@ -5,7 +5,6 @@ def csv_to_records(text: str) -> list[dict]:
     lines = text.strip().splitlines()
     if not lines:
         return []
-    # Очищаем заголовки от пробелов
     headers = [h.strip() for h in lines[0].split(",")]
     records = []
     for line in lines[1:]:
@@ -26,19 +25,23 @@ def parse_settings(lines: list[str]) -> dict:
     for line in lines:
         if not line.strip():
             continue
+        # 1. Отбрасываем комментарии (всё после #)
         if "#" in line:
             line = line.split("#")[0]
-        line = line.rstrip()
-        if not line.strip():
+        # 2. Убираем пробелы по краям
+        line = line.strip()
+        if not line:
             continue
             
-        if line.startswith("  - ") or line.startswith("- "):
-            val = line.split("- ", 1)[1].strip()
+        # 3. Проверяем на элемент списка
+        if line.startswith("- "):
+            val = line[2:].strip()
             val = _convert_type(val)
             if current_list_key is not None:
                 result[current_list_key].append(val)
             continue
             
+        # 4. Проверяем на пару ключ: значение
         if ":" in line:
             parts = line.split(":", 1)
             key = parts[0].strip()
@@ -54,17 +57,21 @@ def parse_settings(lines: list[str]) -> dict:
 
 
 def _convert_type(val: str):
-    if val.lower() in ("true", "yes"):
+    lower_val = val.lower()
+    if lower_val in ("true", "yes"):
         return True
-    if val.lower() in ("false", "no"):
+    if lower_val in ("false", "no"):
         return False
-    # Проверяем на дробное число (с точкой)
+    
+    # Пограничный случай: если внутри есть запятая (3,5) — это не число по правилам YAML, а строка
+    if "," in val:
+        return val
+        
     try:
         if "." in val:
             return float(val)
         return int(val)
     except ValueError:
-        # Если не получилось превратить в число (например, из-за запятой), оставляем строкой
         return val
 
 
