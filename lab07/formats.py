@@ -5,12 +5,13 @@ def csv_to_records(text: str) -> list[dict]:
     lines = text.strip().splitlines()
     if not lines:
         return []
-    headers = lines[0].split(",")
+    # Очищаем заголовки от пробелов
+    headers = [h.strip() for h in lines[0].split(",")]
     records = []
     for line in lines[1:]:
         if not line.strip():
             continue
-        values = line.split(",")
+        values = [v.strip() for v in line.split(",")]
         record = {}
         for i in range(len(headers)):
             record[headers[i]] = values[i] if i < len(values) else ""
@@ -57,11 +58,13 @@ def _convert_type(val: str):
         return True
     if val.lower() in ("false", "no"):
         return False
+    # Проверяем на дробное число (с точкой)
     try:
         if "." in val:
             return float(val)
         return int(val)
     except ValueError:
+        # Если не получилось превратить в число (например, из-за запятой), оставляем строкой
         return val
 
 
