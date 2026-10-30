@@ -59,17 +59,15 @@ def _convert_type(val: str):
     if lower_val in ("false", "no"):
         return False
     
-    # Заменяем запятую на точку (на случай, если это дробное число)
-    val_replaced = val.replace(",", ".")
-    
+    # Если есть запятая - это точно строка по правилам YAML
+    if "," in val:
+        return val
+        
     try:
-        # Если после замены получилось число с точкой
-        if "." in val_replaced:
-            return float(val_replaced)
-        # Иначе пробуем сделать целое число
-        return int(val_replaced)
+        if "." in val:
+            return float(val)
+        return int(val)
     except ValueError:
-        # Если не получилось — возвращаем оригинальную строку
         return val
 
 
